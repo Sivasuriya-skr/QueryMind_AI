@@ -1,0 +1,601 @@
+.connections-loading {
+  padding: 2rem;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.connections-page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Background ── */
+.conn-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: #fbf8ff;
+}
+
+.conn-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+}
+
+.conn-blob-1 {
+  width: 400px;
+  height: 400px;
+  background: #a855f7;
+  top: -120px;
+  right: -80px;
+  opacity: 0.1;
+}
+
+.conn-blob-2 {
+  width: 350px;
+  height: 350px;
+  background: #7c3aed;
+  bottom: -100px;
+  left: -60px;
+  opacity: 0.08;
+}
+
+.conn-blob-3 {
+  width: 250px;
+  height: 250px;
+  background: #c084fc;
+  bottom: 30%;
+  right: 15%;
+  opacity: 0.06;
+}
+
+/* ── Content ── */
+.conn-content {
+  position: relative;
+  z-index: 1;
+  padding: 32px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ── */
+.conn-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.conn-header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: #1e0533;
+}
+
+.conn-subtitle {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.conn-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+.conn-add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3);
+}
+
+.conn-add-btn:active {
+  transform: translateY(0);
+}
+
+/* ── Error banner ── */
+.conn-error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  animation: shakeX 0.3s ease-out;
+}
+
+@keyframes shakeX {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+/* ── Add Connection Form Card ── */
+.conn-form-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.05), 0 1px 4px rgba(0, 0, 0, 0.03);
+  margin-bottom: 28px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.conn-form-card h3 {
+  margin: 0 0 20px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #1e0533;
+}
+
+/* form fields */
+.conn-form-row {
+  margin-bottom: 16px;
+}
+
+.conn-form-grid {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.conn-form-grid-3 {
+  grid-template-columns: 1fr 0.7fr 1fr;
+}
+
+.conn-form-grid-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.conn-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* shared input styles */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper .input-icon {
+  position: absolute;
+  left: 12px;
+  color: #9ca3af;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.input-wrapper:focus-within .input-icon {
+  color: #a855f7;
+}
+
+.conn-field input {
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #1e0533;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.conn-field input::placeholder {
+  color: #9ca3af;
+}
+
+.conn-field input:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.12);
+}
+
+.conn-field input.input-error {
+  border-color: #ef4444;
+}
+
+.conn-field input.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* plain inputs (like port) */
+.conn-field input:not(.input-wrapper input) {
+  padding-left: 12px;
+}
+
+/* password toggle */
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.password-toggle:hover {
+  color: #6b7280;
+}
+
+.field-error {
+  display: block;
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* ── Test result badge ── */
+.test-badge {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.test-badge.test-ok {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.test-badge.test-fail {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+/* ── Form buttons ── */
+.conn-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  background: #fff;
+  color: #7c3aed;
+  border: 1.5px solid #7c3aed;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: #f5f0ff;
+  transform: translateY(-1px);
+}
+
+.btn-outline:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-outline:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Connection List ── */
+.conn-list h2 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 14px;
+  color: #1e0533;
+}
+
+/* empty state */
+.conn-empty {
+  text-align: center;
+  padding: 48px 20px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.05), 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.conn-empty-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #f5f0ff;
+  color: #a855f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.conn-empty-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1e0533;
+  margin: 0 0 6px;
+}
+
+.conn-empty-text {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 20px;
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.conn-empty .btn-primary {
+  margin: 0 auto;
+}
+
+/* connection cards */
+.conn-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px 18px;
+  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.04), 0 1px 4px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 10px;
+  cursor: default;
+}
+
+.conn-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.conn-card.conn-active {
+  box-shadow: 0 0 0 2px #a855f7, 0 6px 20px rgba(124, 58, 237, 0.08);
+}
+
+.conn-card-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.conn-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #f5f0ff;
+  color: #7c3aed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.conn-card-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.conn-card-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e0533;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conn-card-detail {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conn-card-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  margin-left: 14px;
+}
+
+/* status badge */
+.conn-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.status-verified {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.status-failed {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.status-untested {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.status-verified .status-dot {
+  background: #22c55e;
+}
+
+.status-failed .status-dot {
+  background: #ef4444;
+}
+
+.status-untested .status-dot {
+  background: #9ca3af;
+}
+
+/* icon buttons */
+.conn-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.conn-icon-btn:hover:not(:disabled) {
+  background: #f5f0ff;
+}
+
+.conn-icon-test:hover:not(:disabled) {
+  color: #7c3aed;
+}
+
+.conn-icon-delete:hover:not(:disabled) {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.conn-icon-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .conn-content {
+    padding: 20px 16px;
+  }
+
+  .conn-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .conn-add-btn {
+    justify-content: center;
+  }
+
+  .conn-form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .conn-form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .conn-form-actions {
+    flex-direction: column;
+  }
+
+  .conn-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .conn-card-right {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .conn-form-card {
+    padding: 20px;
+  }
+}

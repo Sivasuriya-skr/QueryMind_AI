@@ -1,0 +1,134 @@
+.results-grid-wrapper {
+  margin-top: 0;
+}
+
+.results-meta-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 13px;
+}
+
+.results-meta-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.results-meta-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.results-label {
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.results-count {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.results-time-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.results-time-fast {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.results-time-medium {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.results-time-slow {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.results-grid-hint {
+  color: #9ca3af;
+  font-size: 13px;
+  padding: 20px;
+  text-align: center;
+}
+
+.results-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.results-grid-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.results-grid-container .ag-root-wrapper {
+  border: none;
+}
+
+.results-grid-container .ag-header {
+  background: #faf9ff;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.results-grid-container .ag-header-cell {
+  font-weight: 600;
+  font-size: 12px;
+  color: #374151;
+}
+
+.results-grid-container .ag-header-cell::after {
+  border-right: 1px solid #f3f4f6;
+}
+
+.results-grid-container .ag-cell {
+  font-size: 13px;
+  color: #1e0533;
+  line-height: 1.5;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+}
+
+.results-grid-container .ag-row {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.results-grid-container .ag-row-odd {
+  background: #fcfaff;
+}
+
+.results-grid-container .ag-row:hover {
+  background: #f5f0ff;
+}
+
+.results-grid-container .ag-paging-panel {
+  font-size: 13px;
+  color: #6b7280;
+  border-top: 1px solid #f3f4f6;
+  padding: 8px 12px;
+}
+
+.results-grid-container .ag-paging-panel button {
+  font-size: 13px;
+}
+
+.results-grid-container .ag-filter-wrapper {
+  font-size: 13px;
+}
