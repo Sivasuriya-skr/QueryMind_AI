@@ -78,10 +78,31 @@ public class SchemaDiscoveryService {
                 String fkCol = fks.getString("FKCOLUMN_NAME");
                 String pkTable = fks.getString("PKTABLE_NAME");
                 String pkCol = fks.getString("PKCOLUMN_NAME");
-                fkEntries.add(fkCol + " -> " + pkTable + "." + pkCol);
+                fkEntries.add(fkCol + " -> " + pkTable + "." + pkCol + " (FOREIGN KEY)");
             }
             if (!fkEntries.isEmpty()) {
-                sb.append("\n  Foreign Keys: ").append(String.join(", ", fkEntries));
+                sb.append("\n  Relationships:");
+                for (String fk : fkEntries) {
+                    sb.append("\n    - ").append(fk);
+                }
+            }
+        }
+
+        sb.append("\n");
+
+        // Also show referencing tables (other tables that reference this one)
+        try (ResultSet fks = metaData.getExportedKeys(catalog, null, tableName)) {
+            List<String> refs = new ArrayList<>();
+            while (fks.next()) {
+                String fkTable = fks.getString("FKTABLE_NAME");
+                String fkCol = fks.getString("FKCOLUMN_NAME");
+                String pkCol = fks.getString("PKCOLUMN_NAME");
+                refs.add("Referenced by " + fkTable + "." + fkCol + " (FOREIGN KEY)");
+            }
+            if (!refs.isEmpty()) {
+                for (String ref : refs) {
+                    sb.append("    - ").append(ref).append("\n");
+                }
             }
         }
 
@@ -147,13 +168,13 @@ public class SchemaDiscoveryService {
         String msg = e.getMessage();
         if (msg == null) return "Unknown error connecting to database";
         if (msg.contains("Access denied")) return "Authentication failed";
-        if (msg.contains("Unknown database")) return "Database not found";
+        if (msg.contains("does not exist")) return "Database not found";
         if (msg.contains("Connection refused")) return "Connection refused";
         return msg;
     }
 
     private String buildJdbcUrl(String host, int port, String databaseName) {
-        return "jdbc:mysql://" + host + ":" + port + "/" + databaseName
-                + "?useSSL=false&serverTimezone=UTC&connectTimeout=5000&socketTimeout=5000";
+        return "jdbc:postgresql://" + host + ":" + port + "/" + databaseName
+                + "?connectTimeout=5&socketTimeout=5";
     }
 }

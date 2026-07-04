@@ -3,10 +3,10 @@ server:
 
 spring:
   datasource:
-    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/querymind_app?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
-    username: ${MYSQL_USERNAME:root}
-    password: ${MYSQL_PASSWORD:Root@321}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DATASOURCE_USERNAME:postgres}
+    password: ${DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,7 +14,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 jwt:
   secret: ${JWT_SECRET:dev-jwt-secret-not-for-production}

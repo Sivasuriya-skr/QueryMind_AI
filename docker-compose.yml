@@ -1,18 +1,42 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: querymind-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    expose:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend:
     build: ./backend
     container_name: querymind-backend
     restart: unless-stopped
     environment:
-      MYSQL_URL: jdbc:mysql://host.docker.internal:3306/querymind_app?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-      MYSQL_USERNAME: root
-      MYSQL_PASSWORD: Root@321
-      JWT_SECRET: change-this-to-a-secure-secret-in-production
-      CORS_ALLOWED_ORIGINS: http://localhost:80
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      DATASOURCE_USERNAME: postgres
+      DATASOURCE_PASSWORD: postgres
+      JWT_SECRET: dev-jwt-secret-not-for-production
+      CORS_ALLOWED_ORIGINS: http://localhost:80,http://localhost
+      AI_PROVIDER: ${AI_PROVIDER:-openai}
+      OPENAI_API_KEY: ${GROQ_API_KEY}
+      OPENAI_API_URL: https://api.groq.com/openai/v1
+      OPENAI_MODEL: ${GROQ_MODEL:-llama-3.3-70b-versatile}
     ports:
       - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   frontend:
     build: ./frontend
@@ -22,3 +46,6 @@ services:
       - "80:80"
     depends_on:
       - backend
+
+volumes:
+  postgres_data:

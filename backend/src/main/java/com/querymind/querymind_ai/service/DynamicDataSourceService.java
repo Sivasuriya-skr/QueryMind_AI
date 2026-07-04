@@ -47,19 +47,29 @@ public class DynamicDataSourceService {
             return "Unknown connection error";
         }
 
-        if (message.contains("Access denied") || message.contains("authentication failed")
+        if (message.contains("password authentication failed") || message.contains("authentication failed")
                 || message.contains("password") || message.contains("user")) {
             return "Authentication failed: check username and password";
         }
-        if (message.contains("Unknown database") || message.contains("database") && message.contains("exist")) {
+        if (message.contains("database") && message.contains("does not exist")) {
             return "Database not found: \"" + extractValue(message, "database") + "\"";
         }
-        if (message.contains("Connection refused") || message.contains("Could not connect")
+        if (message.contains("Connection refused") || message.contains("could not connect")
                 || message.contains("timeout") || message.contains("Timeout")) {
-            return "Connection refused: host \"" + extractValue(message, "host")
-                    + "\" or port may be unreachable";
+            String host = extractValue(message, "host");
+            if ("unknown".equals(host)) {
+                int toIdx = message.indexOf("Connection to");
+                if (toIdx >= 0) {
+                    int colonIdx = message.indexOf(":", toIdx);
+                    int spaceIdx = message.indexOf(" ", toIdx);
+                    if (colonIdx > 0 && colonIdx < spaceIdx) {
+                        host = message.substring(toIdx + "Connection to".length(), colonIdx).trim();
+                    }
+                }
+            }
+            return "Connection refused: host \"" + host + "\" or port may be unreachable";
         }
-        if (message.contains("Unknown host") || message.contains("Name or service not known")) {
+        if (message.contains("could not translate host") || message.contains("Name or service not known")) {
             return "Unknown host: check the hostname";
         }
 
@@ -68,14 +78,20 @@ public class DynamicDataSourceService {
 
     private String extractValue(String message, String key) {
         try {
-            int idx = message.toLowerCase().indexOf("'" + key);
+            int idx = message.toLowerCase().indexOf("\"" + key);
+            if (idx == -1) idx = message.toLowerCase().indexOf("'" + key);
             if (idx == -1) idx = message.toLowerCase().indexOf(key + " ");
             if (idx == -1) return "unknown";
 
-            int start = message.indexOf("'", idx);
+            int start = message.indexOf("\"", idx);
+            if (start == -1) start = message.indexOf("'", idx);
             if (start == -1) {
                 int space = message.indexOf(" ", idx);
                 return space == -1 ? "unknown" : message.substring(idx, space).trim();
+            }
+            if (message.charAt(start) == '"') {
+                int end = message.indexOf("\"", start + 1);
+                return end == -1 ? "unknown" : message.substring(start + 1, end);
             }
             int end = message.indexOf("'", start + 1);
             return end == -1 ? "unknown" : message.substring(start + 1, end);
@@ -85,8 +101,7 @@ public class DynamicDataSourceService {
     }
 
     private String buildJdbcUrl(String host, int port, String databaseName) {
-        return "jdbc:mysql://" + host + ":" + port + "/" + databaseName
-                + "?useSSL=false&serverTimezone=UTC&connectTimeout=5000&socketTimeout=5000";
+        return "jdbc:postgresql://" + host + ":" + port + "/" + databaseName;
     }
 
 }

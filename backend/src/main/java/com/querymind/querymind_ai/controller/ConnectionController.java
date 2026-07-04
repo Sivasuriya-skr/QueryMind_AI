@@ -25,7 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/connections")
 @RequiredArgsConstructor
-@Tag(name = "Connections", description = "Manage MySQL database connections")
+@Tag(name = "Connections", description = "Manage PostgreSQL database connections")
 public class ConnectionController {
 
     private final ConnectionService connectionService;

@@ -115,9 +115,9 @@ public class SqlExecutionService {
             String col = (start >= 0 && end > start) ? msg.substring(start + 1, end) : "unknown";
             return "Unknown column: " + col;
         }
-        if (msg.contains("Table") && msg.contains("doesn't exist")) {
-            int start = msg.indexOf("'");
-            int end = msg.indexOf("'", start + 1);
+        if (msg.contains("relation") && msg.contains("does not exist")) {
+            int start = msg.indexOf("\"");
+            int end = msg.indexOf("\"", start + 1);
             String tbl = (start >= 0 && end > start) ? msg.substring(start + 1, end) : "unknown";
             return "Table not found: " + tbl;
         }
@@ -125,8 +125,8 @@ public class SqlExecutionService {
     }
 
     private String buildJdbcUrl(String host, int port, String databaseName) {
-        return "jdbc:mysql://" + host + ":" + port + "/" + databaseName
-                + "?useSSL=false&serverTimezone=UTC&connectTimeout=5000&socketTimeout=5000";
+        return "jdbc:postgresql://" + host + ":" + port + "/" + databaseName
+                + "?connectTimeout=5&socketTimeout=5";
     }
 
 }

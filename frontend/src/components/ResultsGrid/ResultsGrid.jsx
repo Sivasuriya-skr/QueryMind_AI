@@ -1,9 +1,17 @@
 import { useMemo, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
+import { ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule } from 'ag-grid-community';
+import { PaginationModule } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import ChartVisualizer from '../ChartVisualizer/ChartVisualizer';
 import './ResultsGrid.css';
+
+ModuleRegistry.registerModules([
+  ClientSideRowModelModule,
+  PaginationModule,
+]);
 
 function ResultsGrid({ columns, rows, rowCount, executionTimeMs }) {
   const [currentPage, setCurrentPage] = useState(0);

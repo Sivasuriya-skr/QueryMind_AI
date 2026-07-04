@@ -32,7 +32,7 @@ public class SqlAnalysisService {
     private final ObjectMapper objectMapper;
 
     private static final String EXPLAIN_PROMPT_TEMPLATE = """
-You are a MySQL expert. Explain the following SQL query in plain English.
+You are a PostgreSQL expert. Explain the following SQL query in plain English.
 
 Database Schema:
 %s
@@ -50,7 +50,7 @@ Write the explanation in clear, concise plain English suitable for a non-technic
 """;
 
     private static final String OPTIMIZE_PROMPT_TEMPLATE = """
-You are a MySQL performance expert. Review the following SQL query and the database schema, then suggest optimizations.
+You are a PostgreSQL performance expert. Review the following SQL query and the database schema, then suggest optimizations.
 
 Database Schema:
 %s
@@ -75,7 +75,7 @@ Example:
 """;
 
     private static final String EXECUTION_PLAN_INTERPRET_PROMPT_TEMPLATE = """
-You are a MySQL performance expert. Interpret the following EXPLAIN output for a query.
+You are a PostgreSQL performance expert. Interpret the following EXPLAIN output for a query.
 
 Database Schema:
 %s
@@ -138,7 +138,7 @@ Keep the explanation concise and actionable.
 
             statement.setQueryTimeout(EXPLAIN_TIMEOUT_SECONDS);
 
-            try (ResultSet rs = statement.executeQuery("EXPLAIN FORMAT=JSON " + sql)) {
+            try (ResultSet rs = statement.executeQuery("EXPLAIN (FORMAT JSON) " + sql)) {
                 if (rs.next()) {
                     String jsonPlan = rs.getString(1);
                     rawPlan.add(Map.of("EXPLAIN", jsonPlan));
@@ -228,9 +228,9 @@ Keep the explanation concise and actionable.
             String col = (start >= 0 && end > start) ? msg.substring(start + 1, end) : "unknown";
             return "Unknown column: " + col;
         }
-        if (msg.contains("Table") && msg.contains("doesn't exist")) {
-            int start = msg.indexOf("'");
-            int end = msg.indexOf("'", start + 1);
+        if (msg.contains("relation") && msg.contains("does not exist")) {
+            int start = msg.indexOf("\"");
+            int end = msg.indexOf("\"", start + 1);
             String tbl = (start >= 0 && end > start) ? msg.substring(start + 1, end) : "unknown";
             return "Table not found: " + tbl;
         }
@@ -238,7 +238,6 @@ Keep the explanation concise and actionable.
     }
 
     private String buildJdbcUrl(String host, int port, String databaseName) {
-        return "jdbc:mysql://" + host + ":" + port + "/" + databaseName
-                + "?useSSL=false&serverTimezone=UTC&connectTimeout=5000&socketTimeout=5000";
+        return "jdbc:postgresql://" + host + ":" + port + "/" + databaseName;
     }
 }

@@ -26,9 +26,9 @@ public class MockAiProvider implements AiProvider {
         PATTERNS.put("count.*employee|employee.*count|number.*employee",
                 "SELECT COUNT(*) AS total_employees FROM employees");
         PATTERNS.put("joined.*last month|hired.*last month|new.*hire.*last month",
-                "SELECT * FROM employees WHERE hire_date >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)");
+                "SELECT * FROM employees WHERE hire_date >= CURRENT_DATE - INTERVAL '1 month'");
         PATTERNS.put("joined.*2024|hired.*2024",
-                "SELECT * FROM employees WHERE YEAR(hire_date) = 2024");
+                "SELECT * FROM employees WHERE EXTRACT(YEAR FROM hire_date) = 2024");
         PATTERNS.put("department.*name|all department|list.*department",
                 "SELECT id, name FROM departments");
         PATTERNS.put("employee.*per department|employee.*each department|count.*department",
@@ -66,7 +66,7 @@ public class MockAiProvider implements AiProvider {
             return sql + "\n---\nGenerated from keyword analysis.";
         }
 
-        return "SELECT * FROM information_schema.tables WHERE table_schema = DATABASE()\n---\n" +
+        return "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'\n---\n" +
                 "I could not find a specific match for your question. " +
                 "Showing available tables as a fallback.";
     }
@@ -74,17 +74,17 @@ public class MockAiProvider implements AiProvider {
     private String inferFromKeywords(String lower) {
         if (lower.contains("show") || lower.contains("list") || lower.contains("get") || lower.contains("find")) {
             if (lower.contains("table") || lower.contains("schema")) {
-                return "SELECT table_name, table_type FROM information_schema.tables WHERE table_schema = DATABASE() ORDER BY table_name";
+                return "SELECT table_name, table_type FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name";
             }
         }
         if (lower.contains("who") || lower.contains("people") || lower.contains("user") || lower.contains("person")) {
             return "SELECT * FROM employees LIMIT 100";
         }
         if (lower.contains("how many") || lower.contains("count") || lower.contains("total")) {
-            return "SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = DATABASE()";
+            return "SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = 'public'";
         }
         if (lower.contains("recent") || lower.contains("latest") || lower.contains("newest")) {
-            return "SELECT * FROM information_schema.tables ORDER BY create_time DESC LIMIT 10";
+            return "SELECT relname FROM pg_class WHERE relkind = 'r' ORDER BY reltuples DESC LIMIT 10";
         }
         return null;
     }

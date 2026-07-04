@@ -341,7 +341,7 @@ function QueryWorkspace() {
                       onClick={() => {
                         if (!sqlExpanded && editedSql.trim()) {
                           try {
-                            setEditedSql(formatSql(editedSql, { language: 'mysql' }));
+                            setEditedSql(formatSql(editedSql, { language: 'postgresql' }));
                           } catch {}
                         }
                         setSqlExpanded((prev) => !prev);
